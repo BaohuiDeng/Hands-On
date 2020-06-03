@@ -44,11 +44,9 @@ def login():
                login_user = User.objects.filter(username=request.form.get("username")).first()
 
         if login_user:
-                            if bcrypt.hashpw(request.form.get('password').encode('utf-8'), login_user['password'].encode('utf-8')) == login_user['password'].encode('utf-8'):
-                             l = login_user.save()
-                             return '<h4>Welcome! You are logged in as </h4>' + l['username'] 
+                            if bcrypt.checkpw(request.form.get('password').encode('utf-8'), login_user['password'].encode('utf-8')): 
+                                return '<h4>Welcome! You are logged in as </h4>' + login_user['username'] 
         return 'Invalid username/password combination'
-    
 
 
 
