@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,session
 from flask_mail import Mail, Message
 from mongoengine import *
 import bcrypt
+from flask_pymongo import PyMongo 
 
 from document import User
 from login import LoginForm
@@ -38,15 +39,20 @@ def index():
 
 @app.route('/login', methods=['POST'])
 def login():
-  
-    
-        if request.method == 'POST':
-               login_user = User.objects.filter(username=request.form.get("username")).first()
+        app.config['MONGO_DBNAME'] = 'HandsOnSession'
+        app.config['MONGO_URI'] = 'mongodb://localhost:27017/HandsOnSession'
+        mongo = PyMongo(app)
 
-        if login_user:
-                            if bcrypt.checkpw(request.form.get('password').encode('utf-8'), login_user['password'].encode('utf-8')): 
-                                return '<h4>Welcome! You are logged in as </h4>' + login_user['username'] 
-        return 'Invalid username/password combination'
+        if request.method == 'POST':
+            user = mongo.db.user
+            login_user = user.find_one({'username' : request.form.get('username')})
+
+            if login_user:
+                    if bcrypt.checkpw(request.form.get('password').encode('utf-8'), login_user['password'].encode('utf-8')): 
+                        session['username'] = request.form['username']
+                        return 'You are logged in as ' + session['username']
+
+            return 'Invalid username/password combination'
 
 
 
