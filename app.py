@@ -71,13 +71,16 @@ def signup():
             )
             user.save()  
             
-            recipient = request.form['email'] #
-            msg = Message('Welcome to Hands-on session', recipients=[recipient])
-            msg.body = ('Welcome to Flask part 2 Hands-on session')
-            msg.html = ("<h2>Welcome! you have registered!</h2><b>\
-            </b><br><h4>In this session you will learn more about Flask</h4>"
-                )
-            mail.send(msg)
+             
+            # uncomment below when you have configured the email and password #
+            
+            #recipient = request.form['email'] #
+            #msg = Message('Welcome to Hands-on session', recipients=[recipient])
+            #msg.body = ('Welcome to Flask part 2 Hands-on session')
+            #msg.html = ("<h2>Welcome! you have registered!</h2><b>\
+            #</b><br><h4>In this session you will learn more about Flask</h4>"
+             #   )
+            #mail.send(msg)
             return 'you have successfully registered, check your email!'
         return 'That username already exists!'
     return render_template('signup.html',form=form)
